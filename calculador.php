@@ -7,14 +7,7 @@
   <head>
 	  <title>Salário Líquido</title>
 	  <meta charset="utf-8">
-    <style>
-      table, td, th{
-        border: 1px solid black;
-      }
-      table{
-        border-collapse: collapse;
-      }
-    </style>    
+      <link href="estilo.css" rel="stylesheet" type="text/css" > 
   </head>
   <body>
     <table>
@@ -32,6 +25,7 @@
         //Inicialização de Variáveiss
         $inssRef = 0;  
         $inss = 0;
+        $inss_salario = 0;
         $impostoRendaRef = 0;
         $impostoRenda = 0;
         
@@ -52,16 +46,21 @@
 
         //INSS 
         if($val_bruto <= 1556.94){
-          $inss = $val_bruto*0.08;      
+          $inss = $val_bruto*0.08;
+          $inss_salario = $val_bruto - $inss;      
 
         }else if ($val_bruto >= 1556.95 && $val_bruto <= 2594.92){
           $inss = $val_bruto*0.09;    
+          $inss_salario = $val_bruto - $inss;  
 
         }else if ($val_bruto >= 2594.93 && $val_bruto <= 5189.82){
           $inss = $val_bruto*0.11; 
+          $inss_salario = $val_bruto - $inss;  
 
         }else if($val_bruto > 5189.82){
-          $inss = 570.88; 
+          $inss_auxiliar = 5189.82;
+          $inss = $inss_auxiliar * 0.11;
+          $inss_salario = $val_bruto - $inss;  
         }       
 
         //Referência do Imposto de Renda em porcentagem
@@ -82,60 +81,67 @@
         } 
 
         // Imposto de Renda
-        if ($val_bruto <= 1903.98){
+        if ($inss_salario <= 1903.98){
           $impostoRenda = "0.00";
 
-        }else if ($val_bruto >= 1903.99 && $val_bruto <= 2826.65){
-          $impostoRenda = (($val_bruto*0.075) - 142.80 );   
+        }else if ($inss_salario >= 1903.99 && $inss_salario <= 2826.65){
+          $impostoRenda = (($inss_salario*0.075)-142.80);   
 
-        }else if ($val_bruto >= 2826.66 && $val_bruto <= 3751.05){
-          $impostoRenda = (($val_bruto*0.15) - 354.80);  
+        }else if ($inss_salario >= 2826.66 && $inss_salario <= 3751.05){
+          $impostoRenda = (($inss_salario*0.15)-354.80);  
 
-        }else if ($val_bruto >= 3751.06 && $val_bruto <= 4664.68){
-          $impostoRenda = (($val_bruto*0.225) - 636.13); 
+        }else if ($inss_salario >= 3751.06 && $inss_salario <= 4664.68){
+          $impostoRenda = (($inss_salario*0.225)-636.13); 
 
         }else{
-          $impostoRenda = (($val_bruto*0.275) - 869.36);    
+          $impostoRenda = (($inss_salario*0.275)-869.36);    
         } 
 
-        $valorTotalSal = $inss+$impostoRenda;
-        $liquido= $val_bruto-$valorTotalSal;
+        $valorTotalSal = $inss + $impostoRenda;
+        $liquido = (($val_bruto - $inss) - $impostoRenda);
+
+        //Insere duas casas decimais
+        $inss          = number_format($inss,2);
+        $val_bruto     = number_format($val_bruto,2);
+        $impostoRenda  = number_format($impostoRenda,2);
+        $valorTotalSal = number_format($valorTotalSal,2);
+        $liquido       = number_format($liquido,2);
 
         // Cálculo do Salário Bruto
         echo '<tr>';
         echo "<td> Salário Bruto </td>";
         echo "<td> <center> - </center> </td>";
-        echo "<td> {$val_bruto}</td>";        
+        echo "<td> R$ {$val_bruto} </td>";        
         echo "<td> <center> - </center> </td>"; 
         echo '</tr>';
 
         // Cálculo do INSS
         echo '<tr>';
         echo "<td> INSS </td>";
-        echo "<td>{$inssRef}</td>";
+        echo "<td> {$inssRef} </td>";
         echo "<td> <center> - </center> </td>"; 
-        echo "<td>{$inss}</td>";  
+        echo "<td> R$ {$inss}</td>";  
         echo '</tr>';
 
         // Cálculo do IRRF
         echo '<tr>';
         echo "<td> IRRF </td>";
-        echo "<td>{$impostoRendaRef}</td>";
+        echo "<td> {$impostoRendaRef} </td>";
         echo "<td> <center> - </center> </td>"; 
-        echo "<td>{$impostoRenda}</td>";  
+        echo "<td> R$ {$impostoRenda} </td>";  
         echo '</tr>';
 
         // Cálculo do Totais
         echo '<tr>';
         echo '<td colspan="2"> Totais </td>';
-         echo "<td> {$val_bruto}</td>";     
-        echo "<td>{$valorTotalSal}</td>";         
+        echo "<td> R$ {$val_bruto}</td>";     
+        echo "<td> R$ {$valorTotalSal}</td>";         
         echo '</tr>';
 
         // Salário Líquido
         echo '<tr>';
         echo '<td colspan="3"><h3> Salário Líquido </h3> </td>';
-        echo "<td><h3>{$liquido}<h3></td>";        
+        echo "<td><h3> R$ {$liquido}<h3></td>";        
         echo '</tr>';
       ?>
       </tbody>

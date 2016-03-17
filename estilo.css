@@ -1,0 +1,22 @@
+table, td, th{
+	border: 1px solid black;
+	font-weight: 700;
+	font-family:"TimesNewRoman",Arial,serif;
+}
+table{
+	border-collapse: collapse;
+}
+
+h1{
+	text-align:center;
+}
+
+* {
+	margin: 200;
+	padding: 0;
+	outline: none;
+}
+body { 
+	font-weight: 600;
+	height: 100%;
+}
